@@ -1,0 +1,9 @@
+Revision history for Perl extension Math::MatrixReal::Ext1.
+
+0.01  Thu Jan 25 14:37:31 2001
+	- original version; created by h2xs 1.19
+
+0.04 Fri Mar 23 20:23:47 EST 2001
+	- incorporated interface changes as per suggestion in a comp.lang.perl.modules post
+	- updated documentation and test script accordingly
+	- this breaks any old code (all two scripts)
