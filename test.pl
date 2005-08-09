@@ -6,7 +6,7 @@
 # Change 1..1 below to 1..last_test_to_print .
 # (It may become useful if the test is moved to ./t subdirectory.)
 
-BEGIN { $| = 1; print "1..9\n"; }
+BEGIN { $| = 1; print "1..11\n"; }
 END {print "not ok 1\n" unless $loaded;}
 #MIKE
 use strict;
@@ -17,9 +17,12 @@ print "ok 1\n";
 
 ######################### End of black magic.
 
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
+# below we are basically checking the
+# various ways that the new_from_* methods 
+# are supposed to work--with strings, array refs,
+# or Math::MatrixReal vectors.  They are also
+# supposed to work for mixtures of those things,
+# so we're checking that too.
 
 my $matrix2 = Math::MatrixReal::Ext1->new_from_cols([[11,21], [12,22]]); 
 print &check_matrix($matrix2) ? "ok 2\n" : "not ok 2\n";
@@ -58,6 +61,42 @@ print &check_matrix($matrix8) ? "ok 8\n" : "not ok 8\n";
 my $matrix9 = Math::MatrixReal::Ext1->new_from_rows( ["[ 11 12 13 ]\n", $row82, $matrix8->row(3)] );
 print &check_matrix($matrix9) ? "ok 9\n" : "not ok 9\n";
 
+package Foo;
+
+use base qw/Math::MatrixReal/;
+
+package main;
+
+my $foo_string = "[ 11 12 13 ]\n";
+my $foo_matrix = Foo->new_from_string($foo_string);
+
+my $matrix10 = Math::MatrixReal::Ext1->new_from_rows( [$foo_matrix, $row82, $matrix8->row(3)] );
+
+print &check_matrix($matrix10) ? "ok 10\n" : "not ok 10\n";
+
+# make sure it dies with our error message if you pass in a
+# hash ref
+eval{ Math::MatrixReal::Ext1->new_from_cols( [{ foo=> 'bar'}] ) };
+if ($@ =~ /no clue/) {
+    print "ok 11\n";
+}
+else {
+    print "not ok 11\n";
+}
+
+# ok, the matrix we're making in every case is like
+# this (or possibly a different-sized version):
+#  
+#  11  12  13
+#  21  22  23
+#  31  32  33
+#
+# so, all we have to do to check them is
+# to make sure that 10 times the row plus
+# the column of each given element is equal
+# to the value of the element (they're
+# floats, though, so check with tolerance)
+#
 sub check_matrix {
 	my $matrix = shift;
 	my ($rows, $cols) = $matrix->dim;

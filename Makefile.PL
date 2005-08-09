@@ -4,4 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'	=> 'Math::MatrixReal::Ext1',
     'VERSION_FROM' => 'Ext1.pm', # finds $VERSION
+    PREREQ_PM => {
+        'Math::MatrixReal' => 0,
+    },
 );

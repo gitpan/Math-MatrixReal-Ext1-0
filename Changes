@@ -7,3 +7,11 @@ Revision history for Perl extension Math::MatrixReal::Ext1.
 	- incorporated interface changes as per suggestion in a comp.lang.perl.modules post
 	- updated documentation and test script accordingly
 	- this breaks any old code (all two scripts)
+
+0.05 Mon Aug  8 19:33:16 EDT 2005
+
+    - Using ->isa check to see if what's being passed in is a 
+      Math::MatrixReal thing, rather than requiring than looking
+      at ref($foo) and seeing if it matches /^Math::MatrixReal/
+
+    - Some other minor style updates

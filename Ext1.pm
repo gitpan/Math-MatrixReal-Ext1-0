@@ -2,13 +2,12 @@ package Math::MatrixReal::Ext1;
 
 use strict;
 use Math::MatrixReal;
-use vars qw($VERSION @ISA);
 use Carp;
 
 
-@ISA = qw(Math::MatrixReal);
+use base qw/Math::MatrixReal/;
 
-$VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub new_from_cols {
 	my $proto = shift;
@@ -30,21 +29,24 @@ sub new_from_cols {
 		$col_index ++;
 		my $ref = ref( $col ) ;
 
-		if ( $ref =~ /^Math::MatrixReal/ ) {
-			# it's already a Math::MatrixReal something
+		if ( $ref eq '' ) {
+			# we hope this is a string
+			$col = $class->new_from_string( $col );
 		}
 		elsif ( $ref eq 'ARRAY' ) {
 			my @array = @$col;
 			my $length = scalar( @array );
 			$col = $class->new_from_string( '[ '. join( " ]\n[ ", @array) ." ]\n" );
 		}
-		elsif ( $ref eq '' ) {
-			# we hope this is a string
-			$col = $class->new_from_string( $col );
+		elsif ( $ref ne 'HASH' and $col->isa('Math::MatrixReal') ) {
+			# it's already a Math::MatrixReal something,
+            # we don't need to do anything, it will all
+            # work out--but we need this branch so we don't hit the 
+            # error else below
 		}
 		else {
 			# we have no idea, error time!
-			croak __PACKAGE__."::new_from_cols(): sorry, I have no clue what you sent me!  I only know how to deal with array refs, strings, and things that are already in the Math::MatrixReal hierarchy \n";
+			croak __PACKAGE__."::new_from_cols(): sorry, I have no clue what you sent me!  I only know how to deal with array refs, strings, and things that inherit from Math::MatrixReal\n";
 		}
 		my ($length, $one) = $col->dim;
 		croak __PACKAGE__."::new_from_cols(): This isn't a column vector"
@@ -94,21 +96,23 @@ sub new_from_rows {
 		$row_index ++;
 		my $ref = ref( $row ) ;
 
-		if ( $ref =~ /^Math::MatrixReal/ ) {
-			# it's already a Math::MatrixReal something
+		if ( $ref eq '' ) {
+			# we hope this is a string
+			$row = $class->new_from_string( $row );
 		}
 		elsif ( $ref eq 'ARRAY' ) {
 			my @array = @$row;
 			my $length = scalar( @array );
 			$row = $class->new_from_string( '[ '. join( " ", @array) ." ]\n" );
 		}
-		elsif ( $ref eq '' ) {
-			# we hope this is a string
-			$row = $class->new_from_string( $row );
+		elsif ( $ref ne 'HASH' and $row->isa('Math::MatrixReal') ) {
+			# it's already a Math::MatrixReal something,
+            # we don't need to do anything, it will all
+            # work out
 		}
 		else {
 			# we have no idea, error time!
-			croak __PACKAGE__."::new_from_rows(): sorry, I have no clue what you sent me!  I only know how to deal with array refs, strings, and things that are already in the Math::MatrixReal hierarchy \n";
+			croak __PACKAGE__."::new_from_rows(): sorry, I have no clue what you sent me!  I only know how to deal with array refs, strings, and things that inherit from Math::MatrixReal\n";
 		}
 		my ($one, $length) = $row->dim;
 		croak __PACKAGE__."::new_from_rows(): This isn't a column vector"
@@ -139,14 +143,8 @@ sub new_from_rows {
 }
 
 
-# Preloaded methods go here.
-
-# Autoload methods go after =cut, and are processed by the autosplit program.
-
 1;
 __END__
-# Below is the stub of documentation for your module. You better edit it!
-
 =head1 NAME
 
 Math::MatrixReal::Ext1 - Minor extensions to Math::MatrixReal
@@ -169,9 +167,19 @@ The latest version might be at
 
 	http://fulcrum.org/personal/msouth/code/
 
+but I would bet on CPAN if I were you.
+
 =head1 DESCRIPTION
 
 Just scratching a couple of itches for functionality in Math::MatrixReal.
+
+[At the time I wrote this (2001) Math::MatrixReal was abandoned, but 
+someone has since adopted it.  My recent (2005) updates will also
+hopefully go into Math::MatrixReal, but for now I'm putting them
+here because I just can't stand having this stuff out there
+uncorrected.  Once the most recent changes are in the main 
+line, I will deprecate this module and then it will completely
+disappear, probably some time in 2006.]
 
 =over 4
 
@@ -179,7 +187,7 @@ Just scratching a couple of itches for functionality in Math::MatrixReal.
 
 C<new_from_cols( [ $column_vector|$array_ref|$string, ... ] )>
 
-Creates a new matrix given a reference to an array  of any of the following:
+Creates a new matrix given a reference to an array of any of the following:
 
 =over 4
 
