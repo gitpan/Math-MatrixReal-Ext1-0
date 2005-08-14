@@ -179,14 +179,14 @@ else {
 #
 
 sub check_matrix {
-	my $matrix = shift;
-	my ($rows, $cols) = $matrix->dim;
-	my $success = 1;
-	foreach my $row (1..$rows) {
-		foreach my $col (1..$cols) {
-			my $element = $matrix->element($row,$col) ;
-			$success = 0 unless ( abs ( $element - (10*$row + $col) ) < .00001 ) ;
-		}
-	}
-	return $success;
+    my $matrix = shift;
+    my ($rows, $cols) = $matrix->dim;
+    my $success = 1;
+    foreach my $row (1..$rows) {
+        foreach my $col (1..$cols) {
+            my $element = $matrix->element($row,$col) ;
+            $success = 0 unless ( abs ( $element - (10*$row + $col) ) < .00001 ) ;
+        }
+    }
+    return $success;
 }

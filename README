@@ -1,7 +1,7 @@
 Math::MatrixReal::Ext1 is an extension that adds the methods
 
-	new_from_cols
-	new_from_rows
+    new_from_cols
+    new_from_rows
 
 to Math::MatrixReal.  The basic idea is to have a way of creating a matrix
 from array refs rather than just the current new_from_string methods (see
@@ -12,7 +12,7 @@ would find that funny).
 
 This extension is available on my website at
 
-	http://fulcrum.org/personal/msouth/code
+    http://fulcrum.org/personal/msouth/code
 
 where you will also find an html version of the pod, some of which 
 I have pasted in below.  The new_from_* functions also take row 

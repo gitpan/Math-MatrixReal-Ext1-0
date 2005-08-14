@@ -6,31 +6,31 @@ use Carp;
 
 use base qw/Math::MatrixReal/;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub new_from_cols {
-	my $this = shift;
+    my $this = shift;
     my $extra_args = ( @_ > 1 && ref($_[-1]) eq 'HASH' ) ? pop : {};
     $extra_args->{_type} = 'column';
 
-	return $this->_new_from_rows_or_cols(@_, $extra_args );
+    return $this->_new_from_rows_or_cols(@_, $extra_args );
 }
 sub new_from_columns {
     my $this = shift;
     $this->new_from_cols(@_);
 }
 sub new_from_rows {
-	my $this = shift;
+    my $this = shift;
     my $extra_args = ( @_ > 1 && ref($_[-1]) eq 'HASH' ) ? pop : {};
     $extra_args->{_type} = 'row';
 
-	return $this->_new_from_rows_or_cols(@_, $extra_args );
+    return $this->_new_from_rows_or_cols(@_, $extra_args );
 }
 
 sub _new_from_rows_or_cols {
-	my $proto = shift;
-	my $class = ref($proto) || $proto;
-	my $ref_to_vectors = shift;
+    my $proto = shift;
+    my $class = ref($proto) || $proto;
+    my $ref_to_vectors = shift;
 
     # these additional args are internal at the moment, 
     # but in the future the user could pass e.g. {pad=>1} to
@@ -50,9 +50,9 @@ sub _new_from_rows_or_cols {
     # deref and pass a reference themselves.  If that ever happens
     # we can add an arg to skip this check
     croak "$caller_subname: need a reference to an array of ${vector_type}s" unless ref($ref_to_vectors) eq 'ARRAY';
-	my @vectors = @{$ref_to_vectors};
+    my @vectors = @{$ref_to_vectors};
 
-	my $matrix;
+    my $matrix;
 
     my $other_type = {row=>'column', column=>'row'}->{$vector_type};
 
@@ -62,23 +62,23 @@ sub _new_from_rows_or_cols {
     );
 
     # row and column indices are one based
-	my $current_vector_count = 1; 
-	foreach my $current_vector (@vectors) {
-		# dimension is one-based, so we're
+    my $current_vector_count = 1; 
+    foreach my $current_vector (@vectors) {
+        # dimension is one-based, so we're
         # starting with one here and incrementing
         # as we go.  The other dimension is fixed (for now, until
         # we add the 'pad' option), and gets set later
-		my $ref = ref( $current_vector ) ;
+        my $ref = ref( $current_vector ) ;
 
-		if ( $ref eq '' ) {
-			# we hope this is a properly formatted Math::MatrixReal string,
+        if ( $ref eq '' ) {
+            # we hope this is a properly formatted Math::MatrixReal string,
             # but if not we just let the Math::MatrixReal die() do it's
             # thing
-			$current_vector = $class->new_from_string( $current_vector );
-		}
-		elsif ( $ref eq 'ARRAY' ) {
-			my @array = @$current_vector;
-			croak "$caller_subname: one $vector_type you gave me was a ref to an array with no elements" unless @array ;
+                $current_vector = $class->new_from_string( $current_vector );
+            }
+            elsif ( $ref eq 'ARRAY' ) {
+                my @array = @$current_vector;
+                croak "$caller_subname: one $vector_type you gave me was a ref to an array with no elements" unless @array ;
             # we need to create the right kind of string based on whether
             # they said they were sending us rows or columns:
             if ($vector_type eq 'row') {
@@ -87,22 +87,22 @@ sub _new_from_rows_or_cols {
             else {
                 $current_vector = $class->new_from_string( '[ '. join( " ]\n[ ", @array) ." ]\n" );
             }
-		}
-		elsif ( $ref ne 'HASH' and $current_vector->isa('Math::MatrixReal') ) {
-			# it's already a Math::MatrixReal something.
+        }
+        elsif ( $ref ne 'HASH' and $current_vector->isa('Math::MatrixReal') ) {
+            # it's already a Math::MatrixReal something.
             # we don't need to do anything, it will all
             # work out
-		}
-		else {
-			# we have no idea, error time!
-			croak "$caller_subname: I only know how to deal with array refs, strings, and things that inherit from Math::MatrixReal\n";
-		}
+        }
+        else {
+            # we have no idea, error time!
+            croak "$caller_subname: I only know how to deal with array refs, strings, and things that inherit from Math::MatrixReal\n";
+        }
 
         # starting now we know $current_vector isa Math::MatrixReal thingy
-		my @vector_dims = $current_vector->dim;
+        my @vector_dims = $current_vector->dim;
 
         #die unless the appropriate dimension is 1
-		croak "$caller_subname: I don't accept $other_type vectors"
+        croak "$caller_subname: I don't accept $other_type vectors"
             unless ($vector_dims[ $vector_type eq 'row' ? 0 : 1 ] == 1) ;
 
         # the other dimension is the length of our vector
@@ -114,9 +114,9 @@ sub _new_from_rows_or_cols {
 
         # die unless length of this vector matches the first length
         croak "$caller_subname: one $vector_type has [$length] elements and another one had [$matrix_dim{$other_type}]--all of the ${vector_type}s passed in must have the same dimension"
-			  unless ($length == $matrix_dim{$other_type}) ;
+              unless ($length == $matrix_dim{$other_type}) ;
 
-		# create the matrix the first time through
+        # create the matrix the first time through
         $matrix ||= $class->new($matrix_dim{row}, $matrix_dim{column});
 
         # step along the vector assigning the value of each element
@@ -142,8 +142,8 @@ sub _new_from_rows_or_cols {
             $matrix->assign($row_index, $column_index, $value);
         }
         $current_vector_count ++ ;
-	}
-	return $matrix;
+    }
+    return $matrix;
 }
 
 
@@ -169,7 +169,7 @@ Math::MatrixReal::Ext1 - Minor extensions to Math::MatrixReal
 
 The latest version might be at
 
-	http://fulcrum.org/personal/msouth/code/
+    http://fulcrum.org/personal/msouth/code/
 
 but I would bet on CPAN if I were you.
 

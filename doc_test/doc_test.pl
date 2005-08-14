@@ -7,6 +7,6 @@
   $col2 = Math::MatrixReal->new_from_string("[ 2 ]\n[ 4 ]\n[ 6 ]\n");
 
   $mat = Math::MatrixReal::Ext1->new_from_cols( [ $col1, $col2 ]);
-print "$ident3x3\n\n$upper_tri\n\n$mat\n\n";
+  print "$ident3x3\n\n$upper_tri\n\n$mat\n\n";
 
 
