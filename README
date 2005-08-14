@@ -19,9 +19,13 @@ I have pasted in below.  The new_from_* functions also take row
 and column vectors of type Math::MatrixReal and create matrices
 from them.  
 
-Personally, I hope that these methods go into the main body so that
-they don't have to be maintained separately, and then this module can
-disappear.
+At the time I wrote this (2001) Math::MatrixReal was abandoned, but 
+someone has since adopted it.  My recent (2005) updates will also
+hopefully go into Math::MatrixReal, but for now I'm putting them
+here because I just can't stand having this stuff out there
+uncorrected.  Once the most recent changes are in the main 
+line, I will deprecate this module and then it will completely
+disappear, probably some time in 2006.
 
 As I mention in the full documentation, if you are thinking of using this
 module, you might want to check out Math::Pari for a more powerful
